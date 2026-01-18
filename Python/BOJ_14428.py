@@ -7,19 +7,16 @@ def solve():
     tree = [0] * (4 * N)
 
 
-    def make_tree(index, left, right, start, end):
+    def make_tree(index, left, right):
         nonlocal tree, num_list
-
-        if right < start or left > end:
-            return 0
         
         if left == right:
             tree[index] = left
             return left
         
         mid = (left + right) // 2
-        left_min = make_tree(index*2, left, mid, start, end)
-        right_min = make_tree(index*2+1, mid+1, right, start, end)
+        left_min = make_tree(index*2, left, mid)
+        right_min = make_tree(index*2+1, mid+1, right)
 
         if num_list[left_min] < num_list[right_min]:
             tree[index] = left_min
@@ -31,27 +28,25 @@ def solve():
         return tree[index]
     
 
-    def update(index, left, right, start, end, target):
+    def update(index, left, right, target):
         nonlocal num_list, tree
-
-        if left > end or right < start:
-            return 0
         
         if left == right:
             return tree[index]
         
-        if left <= target and target <= right:
-            mid = (left + right) // 2
-            left_min = update(index*2, left, mid, start, end, target)
-            right_min = update(index*2+1, mid+1, right, start, end, target)
+        mid = (left + right) // 2
+        if target <= mid:
+            update(index*2, left, mid, target)
+        else:
+            update(index*2+1, mid+1, right, target)
 
-            if num_list[left_min] < num_list[right_min]:
-                tree[index] = left_min
-            elif num_list[left_min] > num_list[right_min]:
-                tree[index] = right_min
-            else:
-                tree[index] = min(left_min, right_min)
-            
+        if num_list[tree[index*2]] < num_list[tree[index*2+1]]:
+            tree[index] = tree[index*2]
+        elif num_list[tree[index*2]] > num_list[tree[index*2+1]]:
+            tree[index] = tree[index*2+1]
+        else:
+            tree[index] = min(tree[index*2], tree[index*2+1])
+        
         return tree[index]
         
     
@@ -76,14 +71,14 @@ def solve():
             return min(left_min, right_min)
 
 
-    make_tree(1, 1, N, 1, N)
+    make_tree(1, 1, N)
     query_num = int(read().rstrip())
     for _ in range(query_num):
         query, i, j = map(int, read().split())
 
         if query == 1:
             num_list[i] = j
-            update(1, 1, N, 1, N, i)
+            update(1, 1, N, i)
         else:
             print(excute_query(1, 1, N, i, j))
 
