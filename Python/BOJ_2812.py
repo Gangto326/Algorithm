@@ -1,35 +1,20 @@
-import sys, heapq
+import sys
 
 def solve():
     read = sys.stdin.readline
     N, K = map(int, read().split())
-    num_list = list(map(int, list(read().rstrip())))
+    num_list = list(read().rstrip())
 
-    heap = []
+    stack = []
     count = K
-    for index, num in enumerate(num_list):
-        while heap and heap[0][0] < num and count:
-            heapq.heappop(heap)
-            count -= 1
-        
-        heapq.heappush(heap, (num, index))
-
-    answer = ""
-
-    if count:
-        heap.sort(key = lambda x: (-x[0], -x[1]))
-
-        while count:
-            heap.pop()
+    for num in num_list:
+        while stack and stack[-1] < num and count:
+            stack.pop()
             count -= 1
 
-    heap.sort(key = lambda x: x[1])
-
-    for num, _ in heap:
-        answer += str(num)
+        stack.append(num)
     
-    print(answer)
-
+    print("".join(stack[:-count]) if count else "".join(stack))
 
 if __name__ == "__main__":
     solve()
