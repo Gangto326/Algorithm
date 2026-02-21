@@ -18,14 +18,13 @@ def solve():
 
     M = int(read())
     query_list = list(map(int, read().split()))
-    total = sum(num_list)
     answer_list = []
     for i in range(M):
         query = query_list[i]
 
         flag = False
         for j in range(MAX_VALUE - query):
-            if DP[j] and DP[j + query] and j + query <= total - j:
+            if DP[j] and DP[j + query]:
                 flag = True
                 break
 
