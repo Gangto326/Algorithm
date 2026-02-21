@@ -12,7 +12,7 @@ def solve():
     for i in range(N):
         num = num_list[i]
 
-        for j in range(MAX_VALUE - num, -1, -1):
+        for j in range(MAX_VALUE - 1, num - 1, -1):
             if DP[j - num]:
                 DP[j] = True
 
