@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Main {
+public class Jungol_1581 {
     static int t;
     static int aNum;
     static int[] aArray;
