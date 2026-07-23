@@ -2,6 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class Jungol_1681 {
+    static final int INF = 987654321;
     static int num;
     static int[][] board;
     static int[][] DP;
@@ -24,41 +25,36 @@ public class Jungol_1681 {
         int total = 1 << num;
         DP = new int[total][num];
         for (int index=0; index < total; index++) {
-            Arrays.fill(DP[index], Integer.MAX_VALUE);
+            Arrays.fill(DP[index], INF);
         }
-        
-        for (int index=0; index < num; index++) {
-            DP[1 << index][index] = board[0][index] > 0? board[0][index]: Integer.MAX_VALUE;
-        }
+        DP[1][0] = 0;
 
-        for (int comb=0; comb < total; comb++) {
-            for (int index=0; index < num; index++) {
-                int indexBit = 1 << index;
-
-                if ((comb & indexBit) == 0) {
+        for (int visited=1; visited < total; visited++) {
+            for (int curr=0; curr < num; curr++) {
+                if ((visited & (1 << curr)) == 0 || DP[visited][curr] == INF) {
                     continue;
                 }
 
-                int prev = comb - indexBit;
-                for (int beforeIndex=0; beforeIndex < num; beforeIndex++) {
-                    if (DP[prev][beforeIndex] == Integer.MAX_VALUE) {
+                for (int next=0; next < num; next++) {
+                    if ((visited & (1 << next)) != 0 || board[curr][next] == 0) {
                         continue;
                     }
 
-                    if (board[beforeIndex][index] == 0) {
-                        continue;
-                    }
-
-                    DP[comb][index] = Math.min(DP[comb][index], DP[prev][beforeIndex] + board[beforeIndex][index]);
+                    int nextVisited = visited ^ (1 << next);
+                    DP[nextVisited][next] = Math.min(DP[nextVisited][next], DP[visited][curr] + board[curr][next]);
                 }
             }
         }
 
         int answer = Integer.MAX_VALUE;
         for (int index=1; index < num; index++) {
+            if (board[index][0] == 0) {
+                continue;
+            }
+            
             answer = Math.min(answer, DP[total-1][index] + board[index][0]);
         }
 
-        System.out.println(DP[total-1][0]);
+        System.out.println(answer);
     }
 }
