@@ -10,17 +10,13 @@ def solve():
     
     for i in range(1, N + 1):
         while num_list[stack[-1]] < num_list[i]:
-            num = stack.pop()
-            answer_list[num] = stack[-1]
-        
+            stack.pop()
+
+        answer_list[i] = stack[-1]
         stack.append(i)
 
-    while len(stack) != 1:
-        num = stack.pop()
-        answer_list[num] = stack[-1]
-
     print(" ".join(map(str, answer_list[1:])))
-    
+
 
 if __name__ == "__main__":
     solve()
